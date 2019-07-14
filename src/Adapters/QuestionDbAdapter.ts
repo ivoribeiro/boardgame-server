@@ -1,9 +1,9 @@
 import mongoose, { Schema } from "mongoose";
-import Question from "../Models/Question";
+import { IQuestion } from "../Models/Question";
 
 export default class QuestionDbAdapter {
 
-    private MongoModel = mongoose.model("Question", new Schema({
+    private MongoModel = mongoose.model<IQuestion>("Question", new Schema({
         category: {
             required: true,
             type: Number,
@@ -13,12 +13,12 @@ export default class QuestionDbAdapter {
             type: Number,
         },
         translations: {
+            answers: [{ type: String, required: true }],
             of: {
                 question: {
                     required: true,
                     type: String,
                 },
-                answers: [{ type: String, required: true }],
             },
             type: Map,
         },
@@ -33,7 +33,7 @@ export default class QuestionDbAdapter {
         return this.MongoModel.find({}, { password: 0 });
     }
 
-    public async createQuestion(question: Question) {
+    public async createQuestion(question: IQuestion) {
         const novo = new this.MongoModel()
         novo.category = question.category
         novo.rightAnswer = question.rightAnswer

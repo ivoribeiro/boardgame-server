@@ -1,4 +1,5 @@
 import QuestionDbAdapter from "../Adapters/QuestionDbAdapter";
+import { IQuestion } from "../Models/Question";
 
 class Repository<T> {
 
@@ -12,12 +13,12 @@ class Repository<T> {
         return this.dbAdapter.getQuestions();
     }
 
-    public add(question: Question) {
+    public add(question: IQuestion) {
         return this.dbAdapter.createQuestion(question);
     }
 }
 
-export default class QuestionRepository extends Repository<Question> {
+export default class QuestionRepository extends Repository<IQuestion> {
     constructor(questionDbAdapter: QuestionDbAdapter) {
         super(questionDbAdapter);
     }

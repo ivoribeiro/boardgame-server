@@ -1,35 +1,38 @@
+import mongoose, { Document, Schema } from "mongoose";
 
-interface Translation {
-    question: string;
-    answers: {
-        [key: number]: String,
-    };
-}
+import { IQuestionTranslation } from "./QuestionTranslation";
 
-interface Question {
+export interface IQuestion extends Document {
     category: number;
     rightAnswer: number;
     translations: {
-        [key: string]: Translation,
+        [key: string]: IQuestionTranslation,
     };
 
 }
 
-class Translation implements Translation {
-    constructor(question: string, answers: { [key: number]: String }) { }
-}
+const QuestionSchema: Schema = new Schema({
+    classe: {
+        required: true,
+        type: Number,
+    },
+    respostaCerta: {
+        required: true,
+        type: Number,
 
-class Question implements Question {
-    category: number;
-    rightAnswer: number;
+    },
     translations: {
-        [key: string]: Translation,
-    };
-    constructor(category: number, rightAnswer: number, translations: { [key: string]: Translation }) {
-        this.category = category;
-        this.rightAnswer = rightAnswer;
-        this.translations = translations;
-    }
-}
+        of: {
+            answers: [{ type: String, required: true }],
+            question: {
+                required: true,
+                type: String,
+            },
+        },
+        type: Map,
 
-export default Question;
+    },
+});
+
+// Export the model and return your IUser interface
+export default mongoose.model<IQuestion>("Question", QuestionSchema);
