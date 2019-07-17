@@ -31,15 +31,15 @@ const PlaySchema: Schema = new Schema({
         type: Number,
     },
     game: {
-        ref: 'Game',
+        ref: "Game",
         type: Schema.Types.ObjectId,
     },
     player: {
-        ref: 'Player',
+        ref: "Player",
         type: Schema.Types.ObjectId,
     },
     question: {
-        ref: 'Question',
+        ref: "Question",
         type: Schema.Types.ObjectId,
     },
     score: {
@@ -49,7 +49,7 @@ const PlaySchema: Schema = new Schema({
     wasRight: {
         required: false,
         type: Boolean,
-    }
+    },
 });
 
 export default mongoose.model<IPlay>("Play", PlaySchema);

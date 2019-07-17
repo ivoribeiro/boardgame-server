@@ -34,10 +34,10 @@ export default class QuestionDbAdapter {
     }
 
     public async createQuestion(question: IQuestion) {
-        const novo = new this.MongoModel()
-        novo.category = question.category
-        novo.rightAnswer = question.rightAnswer
-        novo.translations = question.translations
+        const novo = new this.MongoModel();
+        novo.category = question.category;
+        novo.rightAnswer = question.rightAnswer;
+        novo.translations = question.translations;
         return novo.save();
     }
 

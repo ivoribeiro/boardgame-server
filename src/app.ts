@@ -26,4 +26,3 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true }).then(
 app.listen(3000, () => {
   console.log("Express listening on port 3000!");
 });
-

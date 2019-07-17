@@ -1,10 +1,11 @@
+import mongoose, { Document, Schema } from "mongoose";
 import { IGame } from "./Game";
 
 enum Role { Admin, Player }
 enum tipoEnsino { Secundario, Profissional }
 enum Gender { masc, fem }
 
-export interface IUser {
+export interface IUser extends Document {
   name: string;
   email: string;
   username: string;
@@ -20,7 +21,7 @@ export interface IUser {
   role: Role;
 }
 
-interface IStudent {
+interface IStudent extends IUser {
   contabilidadeSecundario: number;
   contabilidadeSuperior: number;
   tipoEnsino: Enumerator;
@@ -30,27 +31,40 @@ interface IStudent {
   mediaIngresso: number;
 }
 
-export default class User implements IUser {
-  public name: string;
-  public email: string;
-  public username: string;
-  public password: string;
-  public score: number;
-  public gender: Gender;
-  public birthday?: Date;
-  public jogos: IGame[];
-  public confirmed: boolean;
-  public confirmationToken?: string;
-  public resetPasswordToken?: string;
-  public resetPasswordExpires?: string;
-  public role: Role;
+const UserSchema: Schema = new Schema({
+  anosDeContabilidade: Number,
+  anosDeContabilidadeSuperior: Number,
+  confirmado: Boolean,
+  contabilidadeSecundario: Boolean,
+  contabilidadeSuperior: Boolean,
+  dataNascimento: Date,
+  email: {
+    required: true,
+    type: String,
+    unique: true,
+  },
+  genero: String,
+  hashConfirmacao: String,
+  jogos: [{
+    ref: "Game",
+    type: mongoose.Schema.Types.ObjectId,
+  }],
+  mediaIngresso: String,
+  mediaSecundario: String,
+  nome: String,
+  password: String,
+  pontos: Number,
+  pontuacao: Number,
+  resetPasswordExpires: Date,
+  resetPasswordToken: String,
+  role: String,
+  tipoEnsino: String,
+  username: {
+    required: true,
+    type: String,
+    unique: true,
+  },
+});
 
-  constructor(name: string, email: string, username: string, password: string, gender: Gender, birthday: Date) {
-    this.name = name;
-    this.email = email;
-    this.username = username;
-    this.password = password;
-    this.gender = gender;
-    this.birthday = birthday;
-  }
-}
+// Export the model and return your IUser interface
+export default mongoose.model<IUser>("Question", UserSchema);

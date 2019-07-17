@@ -6,7 +6,7 @@ export interface IQuestionTranslation {
 }
 
 export default class QuestionTranslation implements IQuestionTranslation {
-    question: string;
-    answers: { [key: number]: String; };
+    public question: string;
+    public answers: { [key: number]: String; };
     constructor(question: string, answers: { [key: number]: String }) { }
 }
