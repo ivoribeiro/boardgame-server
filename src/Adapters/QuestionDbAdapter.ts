@@ -1,44 +1,29 @@
 import mongoose, { Schema } from "mongoose";
 import { IQuestion } from "../Models/Question";
 
-export default class QuestionDbAdapter {
+export interface IQuestionDbAdapter {
+    mongooseModel: mongoose.Model<IQuestion>;
+    getQuestions(): Promise<IQuestion[]>;
+    createQuestion(question: IQuestion): Promise<IQuestion>;
+}
 
-    private MongoModel = mongoose.model<IQuestion>("Question", new Schema({
-        category: {
-            required: true,
-            type: Number,
-        },
-        rightAnswer: {
-            required: true,
-            type: Number,
-        },
-        translations: {
-            answers: [{ type: String, required: true }],
-            of: {
-                question: {
-                    required: true,
-                    type: String,
-                },
-            },
-            type: Map,
-        },
-    },
-        {
-            timestamps: true,
-            usePushEach: true,
-        },
-    ));
+export default class QuestionDbAdapter implements IQuestionDbAdapter {
+    public mongooseModel: mongoose.Model<IQuestion>;
 
-    public async getQuestions() {
-        return this.MongoModel.find({}, { password: 0 });
+    constructor(mongooseModel: mongoose.Model<IQuestion>) {
+        this.mongooseModel = mongooseModel;
     }
 
-    public async createQuestion(question: IQuestion) {
-        const novo = new this.MongoModel();
-        novo.category = question.category;
-        novo.rightAnswer = question.rightAnswer;
-        novo.translations = question.translations;
-        return novo.save();
+    public async getQuestions(): Promise<IQuestion[]> {
+        return this.mongooseModel.find({}, { password: 0 });
+    }
+
+    public async createQuestion(question: IQuestion): Promise<IQuestion> {
+        const newQuestion = new this.mongooseModel();
+        newQuestion.category = question.category;
+        newQuestion.rightAnswer = question.rightAnswer;
+        newQuestion.translations = question.translations;
+        return newQuestion.save();
     }
 
 }

@@ -17,7 +17,7 @@ export interface IUser extends Document {
   confirmed: boolean;
   confirmationToken?: string;
   resetPasswordToken?: string;
-  resetPasswordExpires?: string;
+  resetPasswordExpires?: number;
   role: Role;
 }
 
@@ -34,7 +34,8 @@ interface IStudent extends IUser {
 const UserSchema: Schema = new Schema({
   anosDeContabilidade: Number,
   anosDeContabilidadeSuperior: Number,
-  confirmado: Boolean,
+  confirmationToken: String,
+  confirmed: Boolean,
   contabilidadeSecundario: Boolean,
   contabilidadeSuperior: Boolean,
   dataNascimento: Date,
@@ -43,21 +44,19 @@ const UserSchema: Schema = new Schema({
     type: String,
     unique: true,
   },
-  genero: String,
-  hashConfirmacao: String,
-  jogos: [{
+  games: [{
     ref: "Game",
     type: mongoose.Schema.Types.ObjectId,
   }],
+  gender: String,
   mediaIngresso: String,
   mediaSecundario: String,
-  nome: String,
+  name: String,
   password: String,
-  pontos: Number,
-  pontuacao: Number,
   resetPasswordExpires: Date,
   resetPasswordToken: String,
   role: String,
+  score: Number,
   tipoEnsino: String,
   username: {
     required: true,
@@ -67,4 +66,4 @@ const UserSchema: Schema = new Schema({
 });
 
 // Export the model and return your IUser interface
-export default mongoose.model<IUser>("Question", UserSchema);
+export default mongoose.model<IUser>("User", UserSchema);
