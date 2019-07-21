@@ -21,7 +21,7 @@ router.post("/account/confirmation/:token", async (req, res) => {
     });
 });
 
-router.post("/password/recover", async (req, res) => {
+router.post("/account/password/recover", async (req, res) => {
     const { resetPasswordToken, resetPasswordExpires } = await userLogic.recoverPassword(req.body.email);
     res.json({
         resetPasswordExpires,
@@ -30,7 +30,7 @@ router.post("/password/recover", async (req, res) => {
     });
 });
 
-router.post("/password/reset/:token", async (req, res) => {
+router.post("/account/password/reset/:token", async (req, res) => {
     await userLogic.resetPassword(req.params.token, req.body.password);
     res.json({
         success: true,

@@ -1,4 +1,5 @@
-import express = require("express");
+import express from "express";
+import errorMiddleware from "../../Middlewares/ErrorMiddleware";
 import v1Router from "./v1";
 
 const app: express.Application = express();
@@ -8,5 +9,7 @@ app.get("/", async (req, res) => {
 });
 
 app.use("/v1", v1Router);
+
+app.use(errorMiddleware);
 
 export default app;

@@ -1,6 +1,7 @@
 "use strict";
 import { IUserDbAdapter } from "../Adapters/UserDbAdapter";
 import { default as Config } from "../Config";
+import HttpException from "../Exceptions/HttpException";
 import { IUser } from "../Models/User";
 import { email as Email, hash as Hash } from "../Services";
 import * as Utils from "../Utils";
@@ -34,7 +35,7 @@ export default class UserLogic implements IUserLogic {
             Email.sendMail(from, to, subject, html, text);
             return unconfirmedUser;
         } else {
-            throw new Error("ALREADY_EXISTING_USER 400 The user already exists");
+            throw new HttpException(400, "ALREADY_EXISTING_USER,The user already exists");
         }
     }
 
@@ -45,10 +46,10 @@ export default class UserLogic implements IUserLogic {
                 user.confirmed = true;
                 return this.userDbAdapter.updateUser(user);
             } else {
-                throw new Error("USER_ALREADY_CONFIRMED 400, The user was already confirmed");
+                throw new HttpException(400, "USER_ALREADY_CONFIRMED, The user was already confirmed");
             }
         } else {
-            throw new Error("CONFIRMATION_TOKEN_NOT_FOUND, 404, The provided confirmation token dont exists");
+            throw new HttpException(404, "CONFIRMATION_TOKEN_NOT_FOUND, The provided confirmation token dont exists");
         }
     }
     public async recoverPassword(email: string): Promise<IUser> {

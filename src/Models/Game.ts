@@ -1,11 +1,14 @@
 import { Timestamp } from "bson";
 import mongoose, { Document, Schema } from "mongoose";
 import { IPlay } from "./Play";
+import { IQuestion } from "./Question";
 import { IUser } from "./User";
-enum States { emEspera, emJogo, acabado }
+export enum States { waiting, onGame, finished }
 
 export interface IGame extends Document {
-    creator: number;
+    creator: IUser;
+    currentPlayer: IUser;
+    currentQuestion: IQuestion;
     state: States;
     end: Timestamp;
     plays: IPlay[];
@@ -15,23 +18,25 @@ export interface IGame extends Document {
     players: IUser[];
     private: boolean;
     winner: IUser;
+    results: {};
+    order: IUser[];
 
 }
 
 const GameSchema: Schema = new Schema({
-    criador: {
+    creator: {
         ref: "User",
         type: Schema.Types.ObjectId,
     },
-    estado: {
-        enum: ["emEspera", "emJogo", "acabado"],
-        type: String,
-    },
-    fimGame: Date,
-    jogadas: [{
-        ref: "Move",
+    currentPlayer: {
+        ref: "User",
         type: Schema.Types.ObjectId,
-    }],
+    },
+    currentQuestion: {
+        ref: "Question",
+        type: Schema.Types.ObjectId,
+    },
+    end: Date,
     maxPlayers: {
         required: true,
         type: Number,
@@ -40,13 +45,26 @@ const GameSchema: Schema = new Schema({
         required: true,
         type: String,
     },
+    order: [{
+        ref: "User",
+        type: Schema.Types.ObjectId,
+    }],
     pin: Number,
     players: [{
         ref: "User",
         type: Schema.Types.ObjectId,
     }],
-    privado: Boolean,
-    vencedor: {
+    plays: [{
+        ref: "Play",
+        type: Schema.Types.ObjectId,
+    }],
+    private: Boolean,
+    results: {},
+    state: {
+        enum: [States.waiting, States.onGame, States.finished],
+        type: String,
+    },
+    winner: {
         ref: "User",
         type: Schema.Types.ObjectId,
     },
