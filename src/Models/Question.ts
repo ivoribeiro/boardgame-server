@@ -8,15 +8,14 @@ export interface IQuestion extends Document {
     translations: {
         [key: string]: IQuestionTranslation,
     };
-
 }
 
 const QuestionSchema: Schema = new Schema({
-    classe: {
+    category: {
         required: true,
         type: Number,
     },
-    respostaCerta: {
+    rightAnswer: {
         required: true,
         type: Number,
 

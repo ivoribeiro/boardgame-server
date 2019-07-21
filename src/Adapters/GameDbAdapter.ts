@@ -47,35 +47,4 @@ export default class GameDbAdapter implements IGameDbAdapter {
         return update.save();
     }
 
-    public async winGame(gameId: IGame["id"], playerId: IUser["id"]) {
-        const game = await this.getGame(gameId);
-        game.winner = playerId;
-        return game.save();
-    }
-
-    public async finishGame(gameId: IGame["id"]) {
-        const game = await this.getGame(gameId);
-        game.state = States.finished;
-        game.end = new Date();
-        return game.save();
-    }
-
-    public async addMove(gameId: IGame["id"], _idMove) {
-        const game = await this.getGame(gameId);
-        game.jogadas.push(_idMove);
-        return game.save();
-    }
-
-    public async getPontuacoesGame(gameId: IGame["id"]) {
-        const game = await getGame(gameId);
-        const pontuacoes = {};
-        for (let i = 0; i < game.jogadas.length; i++) {
-            if (!pontuacoes[game.jogadas[i].jogador]) {
-                pontuacoes[game.jogadas[i].jogador] = 0;
-            }
-            pontuacoes[game.jogadas[i].jogador] += game.jogadas[i].pontuacao;
-        }
-        return pontuacoes;
-    }
-
 }

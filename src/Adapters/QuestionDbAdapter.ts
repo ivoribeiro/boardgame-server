@@ -5,9 +5,11 @@ export interface IQuestionDbAdapter {
     mongooseModel: mongoose.Model<IQuestion>;
     getQuestions(): Promise<IQuestion[]>;
     createQuestion(question: IQuestion): Promise<IQuestion>;
+    getQuestion(questionId: IQuestion["id"]): Promise<IQuestion>;
 }
 
 export default class QuestionDbAdapter implements IQuestionDbAdapter {
+
     public mongooseModel: mongoose.Model<IQuestion>;
 
     constructor(mongooseModel: mongoose.Model<IQuestion>) {
@@ -15,7 +17,7 @@ export default class QuestionDbAdapter implements IQuestionDbAdapter {
     }
 
     public async getQuestions(): Promise<IQuestion[]> {
-        return this.mongooseModel.find({}, { password: 0 });
+        return this.mongooseModel.find({});
     }
 
     public async createQuestion(question: IQuestion): Promise<IQuestion> {
@@ -26,4 +28,7 @@ export default class QuestionDbAdapter implements IQuestionDbAdapter {
         return newQuestion.save();
     }
 
+    public async getQuestion(questionId: IQuestion["id"]): Promise<IQuestion> {
+        return this.mongooseModel.findOne(questionId);
+    }
 }
