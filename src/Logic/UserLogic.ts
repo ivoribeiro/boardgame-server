@@ -1,7 +1,9 @@
 "use strict";
+import * as jwt from "jsonwebtoken";
 import { IUserDbAdapter } from "../Adapters/UserDbAdapter";
 import { default as Config } from "../Config";
 import HttpException from "../Exceptions/HttpException";
+import { IDataStoredInToken, ITokenData } from "../Interfaces/Token";
 import { IUser } from "../Models/User";
 import { email as Email, hash as Hash } from "../Services";
 import * as Utils from "../Utils";
@@ -12,7 +14,9 @@ export interface IUserLogic {
     confirm(confirmationToken: string): Promise<IUser>;
     recoverPassword(email: string): Promise<IUser>;
     resetPassword(resetPasswordToken: IUser["resetPasswordToken"], password: IUser["password"]): Promise<IUser>;
+    login(email: IUser["email"], password: IUser["password"]): Promise<any>;
 }
+
 export default class UserLogic implements IUserLogic {
     public userDbAdapter: IUserDbAdapter;
 
@@ -70,7 +74,10 @@ export default class UserLogic implements IUserLogic {
             throw new Error("UNEXISTING_USER', 404, 'The user doesnt exists");
         }
     }
-    public async resetPassword(resetPasswordToken: IUser["resetPasswordToken"], password: IUser["password"]): Promise<IUser> {
+    public async resetPassword(
+        resetPasswordToken: IUser["resetPasswordToken"],
+        password: IUser["password"]): Promise<IUser> {
+
         const user = await this.userDbAdapter.getByResetPasswordToken(resetPasswordToken);
         if (user) {
             user.password = await Hash.hash(password);
@@ -80,10 +87,38 @@ export default class UserLogic implements IUserLogic {
         }
     }
 
+    public async login(email: IUser["email"], password: IUser["password"]): Promise<any> {
+        const user = await this.userDbAdapter.getByEmail(email);
+        const check = await Hash.compare(password, user.password);
+        if (check) {
+            const tokenData = this.createToken(user);
+            const cookie = this.createCookie(tokenData);
+            return { user, cookie };
+        }
+        throw new HttpException(400, "WRONG_CREDENTIALS, wrong credentials supplied");
+    }
+
+    private createCookie(tokenData: ITokenData) {
+        return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
+    }
+
+    private createToken(user: IUser): ITokenData {
+        const expiresIn = 60 * 60; // an hour
+        const secret = "secret";
+        const dataStoredInToken: IDataStoredInToken = {
+            _id: user._id,
+        };
+        return {
+            expiresIn,
+            token: jwt.sign(dataStoredInToken, secret, { expiresIn }),
+        };
+    }
+
     private async alreadyExist(email: IUser["email"], username: IUser["username"]): Promise<any> {
         const promiseEmail = this.userDbAdapter.getByEmail(email);
         const promiseUsername = this.userDbAdapter.getByUsername(username);
         const values = await Promise.all([promiseEmail, promiseUsername]);
         return !(values[0] === null && values[1] === null);
     }
+
 }

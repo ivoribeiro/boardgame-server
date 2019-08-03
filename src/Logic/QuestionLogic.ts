@@ -11,10 +11,13 @@ export interface IQuestionLogic {
     newQuestion(question: IQuestion): Promise<IQuestion>;
     all(): Promise<IQuestion[]>;
     getQuestion(questionId: IQuestion["id"]): Promise<IQuestion>;
-    addTranslation(questionTranslation: IQuestionTranslation): Promise<IQuestion>;
+    getQuestion(questionId: IQuestion["id"]): Promise<IQuestion>;
+    addTranslation(question: IQuestion, questionTranslation: IQuestionTranslation): Promise<IQuestion>;
+    getRandQuestion(category: IQuestion["category"]): Promise<IQuestion>;
 
 }
 export default class QuestionLogic implements IQuestionLogic {
+
     public questionDbAdapter: IQuestionDbAdapter;
 
     constructor(questionDbAdapter: IQuestionDbAdapter) {
@@ -29,7 +32,13 @@ export default class QuestionLogic implements IQuestionLogic {
     public async getQuestion(questionId: any): Promise<IQuestion> {
         return this.questionDbAdapter.getQuestion(questionId);
     }
-    public async addTranslation(questionTranslation: IQuestionTranslation): Promise<IQuestion> {
+    public async addTranslation(question: IQuestion, questionTranslation: IQuestionTranslation): Promise<IQuestion> {
         throw new Error("Method not implemented.");
     }
+
+    public async getRandQuestion(category: IQuestion["category"]): Promise<IQuestion> {
+        const questions = await this.questionDbAdapter.getByCategory(category);
+        return questions[Math.floor(Math.random() * questions.length)];
+    }
+
 }

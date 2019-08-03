@@ -18,7 +18,9 @@ export interface IGame extends Document {
     players: IUser[];
     private: boolean;
     winner: IUser;
-    results: {};
+    results: {
+        [key: string]: {},
+    };
     order: IUser[];
 
 }
@@ -59,7 +61,16 @@ const GameSchema: Schema = new Schema({
         type: Schema.Types.ObjectId,
     }],
     private: Boolean,
-    results: {},
+    results: {
+        of: {
+            result: {
+                required: false,
+                type: Object,
+            },
+        },
+        type: Map,
+
+    },
     state: {
         enum: [States.waiting, States.onGame, States.finished],
         type: String,

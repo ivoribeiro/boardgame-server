@@ -37,4 +37,24 @@ router.post("/account/password/reset/:token", async (req, res) => {
     });
 });
 
+router.post("/auth/login", async (req, res) => {
+    const { cookie } = await userLogic.login(req.body.email, req.body.password);
+    res.setHeader("Set-Cookie", [cookie]);
+    res.json({
+        success: true,
+    });
+});
+
+router.post("/auth/check", async (req, res) => {
+    await userLogic.checkLogin(req.params.token);
+    res.json({
+        success: true,
+    });
+});
+
+router.post("/auth/logout", async (req, res) => {
+    res.setHeader("Set-Cookie", ["Authorization=;Max-age=0"]);
+    res.send(200);
+});
+
 export default router;

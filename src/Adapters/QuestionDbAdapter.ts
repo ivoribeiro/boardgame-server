@@ -6,6 +6,7 @@ export interface IQuestionDbAdapter {
     getQuestions(): Promise<IQuestion[]>;
     createQuestion(question: IQuestion): Promise<IQuestion>;
     getQuestion(questionId: IQuestion["id"]): Promise<IQuestion>;
+    getByCategory(category: IQuestion["category"]): Promise<IQuestion[]>;
 }
 
 export default class QuestionDbAdapter implements IQuestionDbAdapter {
@@ -29,6 +30,10 @@ export default class QuestionDbAdapter implements IQuestionDbAdapter {
     }
 
     public async getQuestion(questionId: IQuestion["id"]): Promise<IQuestion> {
-        return this.mongooseModel.findOne(questionId);
+        return this.mongooseModel.findOne({ _id: questionId });
+    }
+
+    public async getByCategory(category: IQuestion["category"]): Promise<IQuestion[]> {
+        return this.mongooseModel.find({ category });
     }
 }

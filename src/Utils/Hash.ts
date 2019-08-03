@@ -4,7 +4,7 @@ export interface IHash {
     salt: string;
     saltLength: number;
     hash(data: any): Promise<any>;
-    compare(plainData: any, hash: string): Promise<any>;
+    compare(plainData: any, hash: string): Promise<boolean>;
 }
 
 export default class Hash implements IHash {
@@ -22,10 +22,7 @@ export default class Hash implements IHash {
      * @param _config   Additional configuration. Doesn't needed by default.
      */
     public async hash(data: any) {
-        // generate a hash for the given data
-        return new Promise((resolve, reject) => {
-            bcrypt.hash(data, this.salt || this.saltLength, (error, hash) => error ? reject(error) : resolve(hash));
-        });
+        return bcrypt.hash(data, this.salt || this.saltLength);
     }
 
     /**
@@ -35,9 +32,7 @@ export default class Hash implements IHash {
      * @param hash          Hash to compare with.
      * @returns {Promise}
      */
-    public async compare(plainData: any, hash: string) {
-        return new Promise((resolve, reject) => {
-            bcrypt.compare(plainData, hash, (error, equal) => error ? reject(error) : resolve(equal));
-        });
+    public async compare(plainData: any, hash: string): Promise<boolean> {
+        return bcrypt.compare(plainData, hash);
     }
 }

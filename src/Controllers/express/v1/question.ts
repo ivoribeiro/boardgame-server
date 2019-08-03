@@ -18,6 +18,11 @@ router.get("/", async (req, res) => {
     res.json(questions);
 });
 
+router.get("/rand/category/:categoryId", async (req, res) => {
+    const question = await questionLogic.getRandQuestion(req.params.categoryId);
+    res.json(question);
+});
+
 router.get("/:questionId", async (req, res) => {
     const question = await questionLogic.getQuestion(req.params.questionId);
     res.json(question);

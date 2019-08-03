@@ -22,7 +22,11 @@ const QuestionSchema: Schema = new Schema({
     },
     translations: {
         of: {
-            answers: [{ type: String, required: true }],
+            answers: {
+                of: String,
+                required: true,
+                type: Map,
+            },
             question: {
                 required: true,
                 type: String,

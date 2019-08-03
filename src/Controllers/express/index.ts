@@ -1,9 +1,11 @@
+import cookieParser from "cookie-parser";
 import express from "express";
 import errorMiddleware from "../../Middlewares/ErrorMiddleware";
 import v1Router from "./v1";
 
 const app: express.Application = express();
 app.use(express.json());
+app.use(cookieParser());
 app.get("/", async (req, res) => {
     res.json({ message: "hooray! welcome to our api!" });
 });
