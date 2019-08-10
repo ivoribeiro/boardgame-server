@@ -45,13 +45,6 @@ router.post("/auth/login", async (req, res) => {
     });
 });
 
-router.post("/auth/check", async (req, res) => {
-    await userLogic.checkLogin(req.params.token);
-    res.json({
-        success: true,
-    });
-});
-
 router.post("/auth/logout", async (req, res) => {
     res.setHeader("Set-Cookie", ["Authorization=;Max-age=0"]);
     res.send(200);

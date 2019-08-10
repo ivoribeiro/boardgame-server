@@ -2,6 +2,7 @@
 import { IGameDbAdapter } from "../Adapters/GameDbAdapter";
 import { default as Config } from "../Config";
 import HttpException from "../Exceptions/HttpException";
+import { IPlayerResults } from "../Interfaces/PlayerResults";
 import { IGame, States } from "../Models/Game";
 import { IQuestion } from "../Models/Question";
 import { IUser } from "../Models/User";
@@ -23,10 +24,10 @@ export interface IGameLogic {
     gameResults(gameId: IGame["id"]): Promise<IGame["results"]>;
     getPlayersOrder(gameId: IGame["id"]): Promise<IGame["order"]>;
     currentPlayer(gameId: IGame["id"]): Promise<IGame["currentPlayer"]>;
-    getGamePlayerResults(gameId: IGame["id"], playerId: IUser["id"]): Promise<IUser>;
+    getGamePlayerResults(gameId: IGame["id"], playerId: IUser["id"]): Promise<IGame["results"]>;
     getCurrentQuestion(gameId: IGame["id"]): Promise<IGame["currentQuestion"]>;
     answerCurrentQuestion(gameId: IGame["id"], answer: number, answerTime: number): Promise<IGame["currentQuestion"]>;
-    currentQuestionTime(gameId: IGame["id"]): number;
+    currentQuestionTime(gameId: IGame["id"]): Promise<number>;
     gameAnswers(gameId: IGame["id"]): Promise<IGame["plays"]>;
     finishGame(gameId: IGame["id"]): Promise<IGame>;
 }
@@ -94,8 +95,9 @@ export default class GameLogic implements IGameLogic {
         const game = await this.getGame(gameId);
         return game.currentPlayer;
     }
-    public async getGamePlayerResults(gameId: IGame["id"], playerId: IUser["id"]): Promise<object> {
-        return (this.gameResults(gameId))[playerId];
+    public async getGamePlayerResults(gameId: IGame["id"], playerId: IUser["id"]): Promise<IGame["results"]> {
+        const game: IGame = await this.getGame(gameId);
+        return game.results;
     }
     public async getCurrentQuestion(gameId: IGame["id"]): Promise<IGame["currentQuestion"]> {
         const game = await this.getGame(gameId);
@@ -104,7 +106,7 @@ export default class GameLogic implements IGameLogic {
     public async answerCurrentQuestion(gameId: IGame["id"], answer: number, answerTime: number): Promise<IQuestion> {
         throw new Error("Method not implemented.");
     }
-    public async currentQuestionTime(gameId: IGame["id"]): number {
+    public async currentQuestionTime(gameId: IGame["id"]): Promise<number> {
         throw new Error("Method not implemented.");
     }
     public async gameAnswers(gameId: IGame["id"]): Promise<IGame["plays"]> {
