@@ -41,7 +41,7 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "ts-node-dev": "^1.0.0-pre.40",
+    "ts-node-dev": "^1.0.0-pre.43",
     "tslint": "^5.18.0",
     "typescript": "^3.5.2"
   },
