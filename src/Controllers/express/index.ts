@@ -1,5 +1,6 @@
 import cookieParser from "cookie-parser";
 import express from "express";
+import "express-async-errors";
 import errorMiddleware from "../../Middlewares/ErrorMiddleware";
 import v1Router from "./v1";
 

@@ -2,11 +2,11 @@ import GameDbAdapter, { IGameDbAdapter } from "../Adapters/GameDbAdapter";
 import QuestionDbAdapter, { IQuestionDbAdapter } from "../Adapters/QuestionDbAdapter";
 import UserDbAdapter, { IUserDbAdapter } from "../Adapters/UserDbAdapter";
 
+import { IGameLogic } from "../Interfaces/Game";
 import GameModel from "../Models/Game";
 import QuestionModel from "../Models/Question";
 import UserModel from "../Models/User";
-
-import GameLogic, { IGameLogic } from "./GameLogic";
+import GameLogic from "./GameLogic";
 import QuestionLogic, { IQuestionLogic } from "./QuestionLogic";
 import UserLogic, { IUserLogic } from "./UserLogic";
 

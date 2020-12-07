@@ -49,6 +49,7 @@ export interface IAsyncRouterMatcher<T> {
     (path: PathParams, ...handlers: AsyncRequestHandlerParams[]): T;
 }
 
+// tslint:disable-next-line: interface-name
 export interface AsyncRouter extends IRouter {
     useAsync: IAsyncRouterMatcher<this>;
     getAsync: IAsyncRouterMatcher<this>;
@@ -61,6 +62,7 @@ export interface AsyncRouter extends IRouter {
 }
 
 const wrapHandler = (handler: AsyncRequestHandler): AsyncRequestHandler => {
+    // tslint:disable-next-line: variable-name
     return (req: X.Request, res: X.Response, _next: X.NextFunction) => {
         const next = fp.once(_next);
         return handler(req, res, next)
@@ -70,6 +72,7 @@ const wrapHandler = (handler: AsyncRequestHandler): AsyncRequestHandler => {
 };
 
 const wrapMiddleware = (handler: X.ErrorRequestHandler): AsyncErrorRequestHandler => {
+    // tslint:disable-next-line: variable-name
     return (err: any, req: X.Request, res: X.Response, _next: X.NextFunction) => {
         const next = fp.once(_next);
         return handler(err, req, res, next).then(next, next);

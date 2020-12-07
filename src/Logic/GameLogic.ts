@@ -2,6 +2,7 @@
 import { IGameDbAdapter } from "../Adapters/GameDbAdapter";
 import { default as Config } from "../Config";
 import HttpException from "../Exceptions/HttpException";
+import { IGameLogic } from "../Interfaces/Game";
 import { IPlayerResults } from "../Interfaces/PlayerResults";
 import { IGame, States } from "../Models/Game";
 import { IQuestion } from "../Models/Question";
@@ -9,28 +10,6 @@ import { IUser } from "../Models/User";
 import { email as Email, hash as Hash } from "../Services";
 import * as Utils from "../Utils";
 
-export interface IGameLogic {
-    gameDbAdapter: IGameDbAdapter;
-    newGame(game: IGame): Promise<IGame>;
-    all(): Promise<IGame[]>;
-    onWaiting(): Promise<IGame[]>;
-    onGame(): Promise<IGame[]>;
-    finished(): Promise<IGame[]>;
-    getGame(gameId: IGame["id"]): Promise<IGame>;
-    joinGame(gameId: IGame["id"], playerId: IUser["id"]): Promise<IGame>;
-    leaveGame(gameId: IGame["id"], playerId: IUser["id"]): Promise<IGame>;
-    gamePlayers(gameId: IGame["id"]): Promise<IGame["players"]>;
-    startGame(gameId: IGame["id"]): Promise<IGame>;
-    gameResults(gameId: IGame["id"]): Promise<IGame["results"]>;
-    getPlayersOrder(gameId: IGame["id"]): Promise<IGame["order"]>;
-    currentPlayer(gameId: IGame["id"]): Promise<IGame["currentPlayer"]>;
-    getGamePlayerResults(gameId: IGame["id"], playerId: IUser["id"]): Promise<IGame["results"]>;
-    getCurrentQuestion(gameId: IGame["id"]): Promise<IGame["currentQuestion"]>;
-    answerCurrentQuestion(gameId: IGame["id"], answer: number, answerTime: number): Promise<IGame["currentQuestion"]>;
-    currentQuestionTime(gameId: IGame["id"]): Promise<number>;
-    gameAnswers(gameId: IGame["id"]): Promise<IGame["plays"]>;
-    finishGame(gameId: IGame["id"]): Promise<IGame>;
-}
 export default class GameLogic implements IGameLogic {
     public gameDbAdapter: IGameDbAdapter;
 

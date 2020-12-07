@@ -8,9 +8,11 @@ const router = Router();
 router.post("/", async (req, res) => {
     const game: IGame = new Game(
         {
-            name: req.body.name, pin: req.body.pin,
-            private: req.body.private, creator: req.body.creator,
+            creator: req.body.creator,
             maxPlayers: req.body.maxPlayers,
+            name: req.body.name,
+            pin: req.body.pin,
+            private: req.body.private,
         },
     );
     const newGame = await gameLogic.newGame(game);
